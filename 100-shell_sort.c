@@ -1,63 +1,34 @@
 #include "sort.h"
-/**
- * _swap - swap two numbers.
- * @a: integer
- * @b: integer
- **/
 
-void _swap(int *a, int *b)
-{
-	int tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
 /**
- * backward_insertion -swap two nodes right left position
- * @array: array
- * @gap: gap
- * @act: actual position in the array
- **/
-void backward_insertion(int *array, int gap, int act)
-{
-	int i;
+* shell_sort - Sorts array using Knuth Sequence of Shell sort
+* @array: Array to be sorted
+* @size: Size of array to sort
+*/
 
-	for (i = act - gap; i >= 0; i -= gap, act -= gap)
-	{
-		if (array[i] > array[act])
-			_swap(&array[i], &array[act]);
-		else
-			break;
-	}
-}
-/**
- * shell_sort -Sort an array using shell_sort algorithm
- * @array: array
- * @size: size
- **/
 void shell_sort(int *array, size_t size)
 {
-	unsigned int gap = 1, i, j;
+	size_t i, gap = 1, k;
+	int v;
 
 	if (array == NULL)
 		return;
-	if (size < 2)
-		return;
-	while (gap < size / 3)
-		gap = gap * 3 + 1;
-
+	while (gap < size)
+		gap = 3 * gap + 1;
+	if (gap >= size)
+		gap = (gap - 1) / 3;
 	while (gap > 0)
 	{
-		for (i = 0, j = gap; j < size; i++, j++)
+		for (i = gap; i < size; i++)
 		{
-			if (array[i] > array[j])
+			v = array[i];
+			for (k = i; (k > gap - 1) && (v < array[k - gap]); k -= gap)
 			{
-				_swap(&array[i], &array[j]);
-				backward_insertion(array, gap, i);
+				array[k] = array[k - gap];
 			}
+			array[k] = v;
 		}
+		gap = (gap - 1) / 3;
 		print_array(array, size);
-		gap /= 3;
 	}
 }
